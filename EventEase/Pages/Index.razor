@@ -1,0 +1,31 @@
+@page "/"
+@using EventEase.Models
+@using EventEase.Components
+@using EventEase.Services
+@inject AppState State
+
+<PageTitle>EventEase - Home</PageTitle>
+
+<h1>EventEase Dashboard</h1>
+<p class="lead">Active User: <strong>@State.CurrentUser</strong> | Global Registrations: <strong>@State.TotalRegistered</strong></p>
+
+<hr />
+
+<h3>Available Events</h3>
+@foreach (var ev in eventList)
+{
+    <EventCard Event="ev" OnAttendeeAdded="HandleAttendanceTracker" />
+}
+
+@code {
+    private List<EventItem> eventList = new()
+    {
+        new EventItem { Id = 1, Title = "Tech Summit 2026", Location = "Main Hall", Date = DateTime.Today.AddDays(7), AttendeesCount = 12 },
+        new EventItem { Id = 2, Title = "AI & Blazor Workshop", Location = "Room 101", Date = DateTime.Today.AddDays(14), AttendeesCount = 5 }
+    };
+
+    private void HandleAttendanceTracker(EventItem updatedEvent)
+    {
+        State.IncrementAttendance();
+    }
+}
